@@ -3,7 +3,7 @@
   "version": "2.10.9",
   "private": false,
   "description": "ChatGPT Web",
-  "author": "ChenZhaoYu <chenzhaoyu1994@gmail.com>",
+  "author": "",
   "keywords": [
     "chatgpt-web",
     "chatgpt",
@@ -25,12 +25,15 @@
   "dependencies": {
     "@traptitech/markdown-it-katex": "^3.6.0",
     "@vueuse/core": "^9.13.0",
+    "element-plus": "^2.2.33",
     "highlight.js": "^11.7.0",
     "html2canvas": "^1.4.1",
     "katex": "^0.16.4",
     "markdown-it": "^13.0.1",
     "naive-ui": "^2.34.3",
+    "nodemailer": "^6.9.1",
     "pinia": "^2.0.33",
+    "randomstring": "^1.2.3",
     "vue": "^3.2.47",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.1.6"
@@ -57,6 +60,8 @@
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.21",
     "rimraf": "^4.2.0",
+    "sass": "^1.58.3",
+    "sass-loader": "^13.2.0",
     "tailwindcss": "^3.2.7",
     "typescript": "~4.9.5",
     "vite": "^4.2.0",

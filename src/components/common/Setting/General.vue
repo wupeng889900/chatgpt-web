@@ -124,13 +124,14 @@ function handleImportButtonClick(): void {
   <div class="p-4 space-y-5 min-h-[200px]">
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
-        <div class="flex-1">
-          <NInput v-model:value="avatar" placeholder="" />
-        </div>
-        <NButton size="tiny" text type="primary" @click="updateUserInfo({ avatar })">
-          {{ $t('common.save') }}
-        </NButton>
+				<span>🌼 尊敬的 <span class="text-red-600">wupeng88163@163.com</span>
+					您好，您当前为 <span class="text-red-600">付费会员</span>，
+					今日剩余可用对话次数为：
+					<span class="text-green-600">
+						10
+					</span> 次，其中包括免费次数
+					<span class="text-green-600">5</span> 次，次卡套餐
+					<span class="text-green-600">5</span> 次（💡 若在过程中出现无结果或异常，将不会扣除您的次数）</span>
       </div>
       <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
@@ -138,15 +139,6 @@ function handleImportButtonClick(): void {
           <NInput v-model:value="name" placeholder="" />
         </div>
         <NButton size="tiny" text type="primary" @click="updateUserInfo({ name })">
-          {{ $t('common.save') }}
-        </NButton>
-      </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.description') }}</span>
-        <div class="flex-1">
-          <NInput v-model:value="description" placeholder="" />
-        </div>
-        <NButton size="tiny" text type="primary" @click="updateUserInfo({ description })">
           {{ $t('common.save') }}
         </NButton>
       </div>
@@ -211,12 +203,6 @@ function handleImportButtonClick(): void {
             @update-value="value => appStore.setLanguage(value)"
           />
         </div>
-      </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.resetUserInfo') }}</span>
-        <NButton size="small" @click="handleReset">
-          {{ $t('common.reset') }}
-        </NButton>
       </div>
     </div>
   </div>

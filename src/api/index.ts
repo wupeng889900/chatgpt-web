@@ -52,6 +52,19 @@ export function fetchChatAPIProcess<T = any>(
   })
 }
 
+export function fetchSendCode<T>(email:any) {
+	return post<T>({
+		url: '/send-code',
+		data:{email:email},
+	})
+}
+
+export function verifyCodeLogin<T>(data:any) {
+	return post<T>({
+		url: '/verifyCode',
+		data,
+	})
+}
 export function fetchSession<T>() {
   return post<T>({
     url: '/session',

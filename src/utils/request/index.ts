@@ -22,10 +22,10 @@ export interface Response<T = any> {
 function http<T = any>(
   { url, data, method, headers, onDownloadProgress, signal, beforeRequest, afterRequest }: HttpOption,
 ) {
-  const successHandler = (res: AxiosResponse<Response<T>>) => {
+  const successHandler = (res: any) => {
     const authStore = useAuthStore()
-
-    if (res.data.status === 'Success' || typeof res.data === 'string')
+		debugger
+    if (res.status == '200' || typeof res.data === 'string' || res.data?.code == 0)
       return res.data
 
     if (res.data.status === 'Unauthorized') {

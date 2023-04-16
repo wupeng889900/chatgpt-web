@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { computed, onMounted, ref } from 'vue'
-import { NSpin } from 'naive-ui'
+import { NSpin,NSpace,NCard,NGrid } from 'naive-ui'
 import { fetchChatConfig } from '@/api'
 import pkg from '@/../package.json'
 import { useAuthStore } from '@/store'
@@ -40,36 +40,48 @@ onMounted(() => {
 
 <template>
   <NSpin :show="loading">
-    <div class="p-4 space-y-4">
-      <h2 class="text-xl font-bold">
-        Version - {{ pkg.version }}
-      </h2>
-      <div class="p-2 space-y-2 rounded-md bg-neutral-100 dark:bg-neutral-700">
-        <p>
-          此项目开源于
-          <a
-            class="text-blue-600 dark:text-blue-500"
-            href="https://github.com/Chanzhaoyu/chatgpt-web"
-            target="_blank"
-          >
-            Github
-          </a>
-          ，免费且基于 MIT 协议，没有任何形式的付费行为！
-        </p>
-        <p>
-          如果你觉得此项目对你有帮助，请在 Github 帮我点个 Star 或者给予一点赞助，谢谢！
-        </p>
-      </div>
-      <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
-      <p v-if="isChatGPTAPI">
-        {{ $t("setting.monthlyUsage") }}：{{ config?.usage ?? '-' }}
-      </p>
-      <p v-if="!isChatGPTAPI">
-        {{ $t("setting.reverseProxy") }}：{{ config?.reverseProxy ?? '-' }}
-      </p>
-      <p>{{ $t("setting.timeout") }}：{{ config?.timeoutMs ?? '-' }}</p>
-      <p>{{ $t("setting.socks") }}：{{ config?.socksProxy ?? '-' }}</p>
-      <p>{{ $t("setting.httpsProxy") }}：{{ config?.httpsProxy ?? '-' }}</p>
-    </div>
-  </NSpin>
+		<el-row :gutter="20">
+			<el-col :span="12">
+				<el-card class="box-card">
+					<div class="n-card-header"><div class="n-card-header__main" role="heading">650次卡</div><!----><!----></div>
+					333333333
+				</el-card>
+			</el-col>
+			<el-col :span="12">
+				<el-card class="box-card">
+					<div class="n-card-header"><div class="n-card-header__main" role="heading">650次卡</div><!----><!----></div>
+					333333333
+				</el-card>
+			</el-col>
+		</el-row>
+	</NSpin>
 </template>
+<style>
+.light-green {
+	height: 108px;
+	background-color: rgba(0, 128, 0, 0.12);
+}
+.green {
+	height: 108px;
+	background-color: rgba(0, 128, 0, 0.24);
+}
+.n-card-header {
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	font-size: var(--n-title-font-size);
+	padding: var(--n-padding-top)  0;
+}
+.n-card-header__main {
+	font-weight: var(--n-title-font-weight);
+	transition: color .3s var(--n-bezier);
+	flex: 1;
+	min-width: 0;
+	color: var(--n-title-text-color);
+}
+.n-card__footer {
+	box-sizing: border-box;
+	padding: 0 var(--n-padding-left) var(--n-padding-bottom) var(--n-padding-left);
+	font-size: var(--n-font-size);
+}
+</style>

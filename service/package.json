@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": false,
   "description": "ChatGPT Web Service",
-  "author": "ChenZhaoYu <chenzhaoyu1994@gmail.com>",
+  "author": "",
   "keywords": [
     "chatgpt-web",
     "chatgpt",
@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "axios": "^1.3.4",
+    "body-parser": "^1.20.2",
     "chatgpt": "^5.1.2",
     "dotenv": "^16.0.3",
     "esno": "^0.16.3",
@@ -32,8 +33,14 @@
     "express-rate-limit": "^6.7.0",
     "https-proxy-agent": "^5.0.1",
     "isomorphic-fetch": "^3.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "jwt-simple": "^0.5.6",
+		"mysql": "^2.15.0",
     "node-fetch": "^3.3.0",
-    "socks-proxy-agent": "^7.0.0"
+		"redis": "^2.8.0",
+    "request-promise": "^4.2.2",
+    "socks-proxy-agent": "^7.0.0",
+    "tracer": "^1.1.6"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.35.3",
