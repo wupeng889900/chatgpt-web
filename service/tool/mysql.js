@@ -1,11 +1,13 @@
 const mysql = require('mysql');
 const async = require('async');
-const config = require('../../../config/sql');
+const config = require('../../config/sql');
 
 
 
 const pool  = mysql.createPool(config);
-
+// setInterval(function () {
+// 	pool.query('SELECT 1');
+// }, 5000);
 
 /*
 * 普通连接

@@ -6,7 +6,7 @@ const queue = require("./queue.js");
 const permissionList = require("./permissionList.js");
 const iconv = require("iconv-lite");
 const db = require("./mysql.js");
-const sqlConfig = require('../../../config/sql');
+const sqlConfig = require('../../config/sql');
 const toJson = require("./toJson");
 
 const getParams = require("./getParams");

@@ -1,6 +1,6 @@
 const jwt = require('jwt-simple');
 const crypto = require('crypto');
-const redisConfig = require("../../../config/redis")
+const redisConfig = require("../../config/redis")
 const redis = require("redis"),
     RDS_PORT = redisConfig.RDS_PORT,            //服务器端口
     RDS_HOST = redisConfig.RDS_HOST,     //服务器ip
@@ -145,7 +145,6 @@ let redisData = {
         * 这里后期再考虑要不要使用Promise异步
         * */
         setToken:async (user, token) => {
-						debugger
             let date = new Date().getTime();
             /*
              * 第一个参数是user  用户信息
