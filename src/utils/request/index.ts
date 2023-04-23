@@ -25,9 +25,12 @@ function http<T = any>(
   const successHandler = (res: any) => {
     const authStore = useAuthStore()
 		debugger
-    if (res.status == '200' || typeof res.data === 'string' || res.data?.code == 0)
-      return res.data
-
+    if (res.status == '200'){
+			if(res.data.code !=0 && typeof res.data !== 'string'){
+				window.$message?.error(res.data.msg)
+			}
+		}
+		return res.data
     if (res.data.status === 'Unauthorized') {
       authStore.removeToken()
       window.location.reload()
@@ -38,6 +41,7 @@ function http<T = any>(
 
   const failHandler = (error: Response<Error>) => {
     afterRequest?.()
+		window.$message?.error('服务器内部异常!')
     throw new Error(error?.message || 'Error')
   }
 

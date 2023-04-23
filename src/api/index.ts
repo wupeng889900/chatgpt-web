@@ -66,8 +66,10 @@ export function verifyCodeLogin<T>(data:any) {
 	})
 }
 export function fetchSession<T>() {
+	//验证token是否有效
   return post<T>({
     url: '/session',
+		data:{ token : localStorage.getItem('token')}
   })
 }
 
@@ -76,4 +78,27 @@ export function fetchVerify<T>(token: string) {
     url: '/verify',
     data: { token },
   })
+}
+export function fetchPayments<T>(data:any) {
+  return post<T>({
+    url: '/payments',
+		data,
+  })
+}
+
+export function paymentsCallback<T>(outTradeNo:any) {
+  return post<T>({
+    url: '/payments_callback',
+		data: outTradeNo
+		,
+  })
+}
+
+
+export function resSuucss<T>(data:any) {
+	return post<T>({
+		url: '/return',
+		data
+		,
+	})
 }

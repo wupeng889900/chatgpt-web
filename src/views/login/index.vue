@@ -94,6 +94,8 @@ import {
 import { isValidEmail } from '@/utils/validate'
 import { useRoute, LocationQuery, useRouter } from 'vue-router'
 import {useChatStore} from '@/store'
+import { useAuthStore, useSettingStore } from '@/store'
+
 import { useI18n } from 'vue-i18n'
 import { fetchSendCode,verifyCodeLogin } from '@/api'
 export default defineComponent({
@@ -101,6 +103,7 @@ export default defineComponent({
   },
   setup() {
 		const chatStore = useChatStore()
+		const authStore = useAuthStore()
     const userNameRef = ref(null)
     const passwordRef = ref(null)
     const loginFormRef = ref<FormInstance>()
@@ -196,7 +199,6 @@ export default defineComponent({
 			handleLogin: (loginFormRef) => {
 				if (!loginFormRef) return
         loginFormRef.validate(async (valid:any, fields:any) => {
-					debugger
           if (valid) {
 						var params ={
 							email:state.loginForm.username,
@@ -209,6 +211,7 @@ export default defineComponent({
 						if(res.code == 0){
 							localStorage.setItem('token',res.data.token)
 							console.log(state.loginForm)
+							authStore.setToken(res.data.token)
 							router.replace({ name: 'Chat', params: { uuid: chatStore.active } })
 								.catch(err => {
 									console.warn(err)

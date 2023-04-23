@@ -31,6 +31,16 @@ const routes: RouteRecordRaw[] = [
 				name: 'Chat',
 				component: () => import('@/views/chat/index.vue'),
 			},
+			{
+				path: '/confirmOrder/:order?',
+				name: 'ConfirmOrder',
+				component: () => import('@/views/paymant/ConfirmOrder.vue'),
+			},
+			{
+				path: '/PaymentPage',
+				name: 'PaymentPage',
+				component: () => import('@/views/paymant/PaymentPage.vue'),
+			},
 		],
 	},
 
