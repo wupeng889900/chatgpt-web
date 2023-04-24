@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref,defineAsyncComponent,  } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { NAutoComplete, NButton, NInput, useDialog, useMessage } from 'naive-ui'
@@ -14,9 +14,9 @@ import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
-import { fetchChatAPIProcess } from '@/api'
+import { fetchChatAPIProcess ,fetchVerify,cardUpdate} from '@/api'
+const Setting = defineAsyncComponent(() => import('@/components/common/Setting/index.vue'))
 import { t } from '@/locales'
-
 let controller = new AbortController()
 
 const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
@@ -42,7 +42,7 @@ const conversationList = computed(() => dataSources.value.filter(item => (!item.
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
-
+const show = ref(false)
 // 添加PromptStore
 const promptStore = usePromptStore()
 
@@ -58,10 +58,19 @@ dataSources.value.forEach((item, index) => {
 function handleSubmit() {
   onConversation()
 }
-
+async function VerifyFun(){
+	let res = await fetchVerify()
+	if(res.code == 10086){
+		window.$message?.info(res.msg)
+		show.value =true
+	}
+	return res;
+}
 async function onConversation() {
   let message = prompt.value
-
+	var resFlag = await VerifyFun()
+	if(resFlag.code == 10086)
+		return
   if (loading.value)
     return
 
@@ -105,7 +114,6 @@ async function onConversation() {
     },
   )
   scrollToBottom()
-
   try {
     let lastText = ''
     const fetchChatAPIOnce = async () => {
@@ -114,9 +122,11 @@ async function onConversation() {
         options,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {
+					debugger
           const xhr = event.target
           const { responseText } = xhr
           // Always process the final line
+					debugger
           const lastIndex = responseText.lastIndexOf('\n', responseText.length - 2)
           let chunk = responseText
           if (lastIndex !== -1)
@@ -151,6 +161,10 @@ async function onConversation() {
           }
         },
       })
+			console.log('执行完成xx')
+			if(resFlag.flag ='card'){
+				cardUpdate({free_remaining_times:resFlag.free_remaining_times})
+			}
       updateChatSome(+uuid, dataSources.value.length - 1, { loading: false })
     }
 
@@ -207,6 +221,9 @@ async function onConversation() {
 }
 
 async function onRegenerate(index: number) {
+	var resFlag = await VerifyFun()
+	if(resFlag.code == 10086)
+		return
   if (loading.value)
     return
 
@@ -247,6 +264,7 @@ async function onRegenerate(index: number) {
         onDownloadProgress: ({ event }) => {
           const xhr = event.target
           const { responseText } = xhr
+					debugger
           // Always process the final line
           const lastIndex = responseText.lastIndexOf('\n', responseText.length - 2)
           let chunk = responseText
@@ -280,6 +298,10 @@ async function onRegenerate(index: number) {
           }
         },
       })
+			console.log('执行完成')
+			if(resFlag.flag ='card'){
+				cardUpdate({free_remaining_times:resFlag.free_remaining_times})
+			}
       updateChatSome(+uuid, index, { loading: false })
     }
     await fetchChatAPIOnce()
@@ -557,4 +579,5 @@ onUnmounted(() => {
       </div>
     </footer>
   </div>
+	<Setting v-if="show" v-model:visible="show" isPay="true"/>
 </template>

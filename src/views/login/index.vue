@@ -94,8 +94,7 @@ import {
 import { isValidEmail } from '@/utils/validate'
 import { useRoute, LocationQuery, useRouter } from 'vue-router'
 import {useChatStore} from '@/store'
-import { useAuthStore, useSettingStore } from '@/store'
-
+import { useAuthStore, useUserStore ,usePromptStore} from '@/store'
 import { useI18n } from 'vue-i18n'
 import { fetchSendCode,verifyCodeLogin } from '@/api'
 export default defineComponent({
@@ -124,6 +123,8 @@ export default defineComponent({
 				callback()
 			}
 		}
+		const userStore = useUserStore()
+		const promptStore = usePromptStore()
     const state = reactive({
       loginForm: {
         username: '',
@@ -210,6 +211,8 @@ export default defineComponent({
 						console.log(res)
 						if(res.code == 0){
 							localStorage.setItem('token',res.data.token)
+							localStorage.setItem('userInfo', res.data?.user_name ||res.data?.user)
+							userStore.userInfo.name = res.data?.user_name ||res.data?.user
 							console.log(state.loginForm)
 							authStore.setToken(res.data.token)
 							router.replace({ name: 'Chat', params: { uuid: chatStore.active } })
@@ -245,6 +248,22 @@ export default defineComponent({
     })
 
     onMounted(() => {
+
+			fetch('./prompts-zh.json')
+				.then((response) => response.json())
+				.then((data) => {
+					console.log(data)
+					const newJsonData = data.map((item: { act: string; prompt: string }) => {
+						return {
+							key: item.act,
+							value: item.prompt,
+						}
+					})
+					promptStore.updatePromptList(newJsonData)
+				})
+				.catch((err) => {
+					console.log('Error:', err);
+				});
       if (state.loginForm.username === '') {
         (userNameRef.value as any).focus()
       } else if (state.loginForm.password === '') {

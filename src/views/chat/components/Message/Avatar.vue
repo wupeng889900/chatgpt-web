@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted ,  reactive,} from 'vue'
 import { NAvatar } from 'naive-ui'
 import { useUserStore } from '@/store'
 import { isString } from '@/utils/is'
 import defaultAvatar from '@/assets/avatar.jpg'
+import AvatarCom from './AvatarCom.vue'
 
 interface Props {
   image?: boolean
@@ -11,14 +12,38 @@ interface Props {
 defineProps<Props>()
 
 const userStore = useUserStore()
-
 const avatar = computed(() => userStore.userInfo.avatar)
+const username = computed(() => userStore.userInfo.name)
+
+const getFontSize = (20 / 2) * 0.8
+
+
+const state = reactive({
+	gradient : '',
+	initials :''
+})
+function getRandomColor() {
+	const letters = "0123456789ABCDEF";
+	let color = "#";
+	for (let i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
+}
+onMounted(() => {
+	state.gradient = `linear-gradient(to bottom right, ${getRandomColor()}, ${getRandomColor()})`
+	state.initials =username.value.charAt(0).toUpperCase()
+	console.log(state.gradient,state.initials,'xxxx')
+})
 </script>
 
 <template>
   <template v-if="image">
-    <NAvatar v-if="isString(avatar) && avatar.length > 0" :src="avatar" :fallback-src="defaultAvatar" />
-    <NAvatar v-else round :src="defaultAvatar" />
+		<div class="avatar" :style="{ background: state.gradient }">
+			<div class="initial">{{ state.initials }}</div>
+			    <NAvatar v-if="isString(avatar) && avatar.length > 0" :src="avatar" :fallback-src="defaultAvatar"/>
+					<NAvatar v-else round :src="defaultAvatar" />
+			</div>
   </template>
   <span v-else class="text-[28px] dark:text-white">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" width="1em" height="1em">
@@ -26,3 +51,28 @@ const avatar = computed(() => userStore.userInfo.avatar)
     </svg>
   </span>
 </template>
+<style>
+.avatar {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	overflow: hidden;
+	/*background: linear-gradient(to right, #FFB88C, #DE6262);*/
+}
+
+.avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.initial {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 22px;
+	color: white;
+	width: 100%;
+	height: 100%;
+	text-transform: uppercase;
+}
+</style>

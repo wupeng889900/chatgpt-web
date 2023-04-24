@@ -1,4 +1,4 @@
-import type { AxiosProgressEvent, AxiosResponse, GenericAbortSignal } from 'axios'
+import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
 import request from './axios'
 import { useAuthStore } from '@/store'
 
@@ -24,9 +24,8 @@ function http<T = any>(
 ) {
   const successHandler = (res: any) => {
     const authStore = useAuthStore()
-		debugger
     if (res.status == '200'){
-			if(res.data.code !=0 && typeof res.data !== 'string'){
+			if(res.data.code !=0 && typeof res.data !== 'string' && res.data.code !=10086){
 				window.$message?.error(res.data.msg)
 			}
 		}

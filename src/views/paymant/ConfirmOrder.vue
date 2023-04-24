@@ -107,7 +107,7 @@ const state = reactive({
 	showModal: false,
 	order: {
 		outTradeNo:'',
-		number: "20211001",
+		number: "",
 		start_date: "",
 		status: "待付款",
 		total: 500,
@@ -131,7 +131,6 @@ const getOrderStatus = async () => {
 	try {
 		//用来查询订单
 	 let response =	await paymentsCallback(state.order)
-		debugger
 		if (response.code == 0) {
 		  axios.get(response.data).then( async (res)=>{
 				if(res.data.alipay_trade_query_response.code == '10000' && res.data.alipay_trade_query_response.trade_status == 'TRADE_SUCCESS'){
@@ -139,10 +138,9 @@ const getOrderStatus = async () => {
 					clearInterval(interval);
 					// state.showModal =false;
 					window.$message.success('支付成功')
-					debugger
 					res.data.id = state.order.id
 					await resSuucss(res.data)
-					// router.replace({ name: 'Chat', params: { uuid: chatStore.active } })
+					router.replace({ name: 'Chat', params: { uuid: chatStore.active } })
 				}else{
 					// window.$message.warning(res.data.alipay_trade_query_response.msg || res.data.alipay_trade_query_response.sub_msg)
 					// clearInterval(interval);
@@ -162,8 +160,8 @@ onMounted(() => {
 const showModal = ()=>{
 	state.showModal= true
 	if (state.order && state.order.status !== 'paid') {
-		getOrderStatus()
-		// interval = setInterval(getOrderStatus, 1000); // 每秒查询一次订单状态
+		// getOrderStatus()
+		interval = setInterval(getOrderStatus, 1000); // 每秒查询一次订单状态
 	}
 	console.log(state.order)
 }

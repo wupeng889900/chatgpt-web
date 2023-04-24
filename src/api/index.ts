@@ -76,7 +76,7 @@ export function fetchSession<T>() {
 export function fetchVerify<T>(token: string) {
   return post<T>({
     url: '/verify',
-    data: { token },
+		data:{ token : localStorage.getItem('token')}
   })
 }
 export function fetchPayments<T>(data:any) {
@@ -98,6 +98,14 @@ export function paymentsCallback<T>(outTradeNo:any) {
 export function resSuucss<T>(data:any) {
 	return post<T>({
 		url: '/return',
+		data
+		,
+	})
+}
+
+export function cardUpdate<T>(data:any) {
+	return post<T>({
+		url: '/cardUpdate',
 		data
 		,
 	})

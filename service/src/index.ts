@@ -77,7 +77,6 @@ router.post('/send-code', (req, res) => {
 	})
 })
 router.post('/verifyCode',async (req, res) => {
-	debugger
 	const email = req.body.email
 	const code = req.body.code
 	if (!email || !code) {
@@ -141,7 +140,18 @@ router.post('/chat-process', oauth(1001), async (req, res) => {
     res.end()
   }
 })
-
+router.post('/cardUpdate', oauth(1001), async (req, res) => {
+	debugger
+	let user_id = await tool.token.getUser(req.headers.authorization);
+	try {
+		await db.query(
+			`UPDATE user_times SET free_remaining_times = ${req.body.free_remaining_times -1} WHERE user_id = "${user_id}"`);
+		res.send(tool.toJson(null, '更新成功', 0))
+	}
+	catch (error) {
+		res.send(error)
+	}
+})
 router.post('/config', oauth(1001), async (req, res) => {
   try {
     const response = await chatConfig()
@@ -167,16 +177,38 @@ router.post('/session', async (req, res) => {
   }
 })
 
+//验证会员是否到期，以及查询免费次数
 router.post('/verify', async (req, res) => {
   try {
-    const { token } = req.body as { token: string }
-    if (!token)
-      throw new Error('Secret key is empty')
+		let user_id = await tool.token.getUser(req.body.token);
+		 //查询最新的完成订单
+		let result2 = await db.query(
+			`select user_times.user_id,user_times.free_total_times,user_times.free_remaining_times from user_times where user_id = ${user_id}`
+		);
+		console.log(result2)
+		if(result2[0].free_remaining_times>0){
+			result2[0].flag='card'
+			res.send(tool.toJson(result2[0], '会员未过期', 0))
+		}else{
+			let result1 = await db.query(
+				`select * from payments where user_id = ${user_id} and status = 'completed' and end_date >= CURDATE() ORDER BY create_time DESC LIMIT 1`
+			);
+			if(result1.length>0){
+				res.send(tool.toJson({end_date:result1[0].end_date,flag:'monthly'}, '会员未过期', 0))
+			}else{
+				let res1 = await db.query(
+					`select * from payments where user_id = ${user_id} and status = 'completed'`
+				);
+				if(res1.length>0){
+					res.send(tool.toJson({flag:'monthly'}, '会员已过期,开通会员即可畅玩GPT', 10086))
+				}else{
+					if(result2[0].free_remaining_times<=0){
+						res.send(tool.toJson({free_remaining_times:0,flag:'card'}, '您的免费次数已经用完了', 10086))
+					}
+				}
 
-    if (process.env.AUTH_SECRET_KEY !== token)
-      throw new Error('密钥无效 | Secret key is invalid')
-
-    res.send({ status: 'Success', message: 'Verify successfully', data: null })
+			}
+		}
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -278,7 +310,6 @@ router.post('/payments_callback',oauth(1001), async (req, res) => {
 	const payment_id = req.body.outTradeNo;
 	const status = req.body.status;
 	try {
-		debugger
 		const formData = new AlipayFormData();
 		formData.setMethod('get');
 		formData.addField('bizContent', {

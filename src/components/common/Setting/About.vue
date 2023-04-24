@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { computed, onMounted, ref,  reactive, } from 'vue'
-import { NSpin} from 'naive-ui'
+import { NSpin,NButton} from 'naive-ui'
 import { fetchChatConfig } from '@/api'
 import { useAuthStore } from '@/store'
 import { fetchPayments } from '@/api'
@@ -28,7 +28,7 @@ const state = reactive({
 	planInfo: [{
 		plan: '包月', //'monthly','quarterly','yearly'
 		val:'1',
-		amount: '0.01',
+		amount: '20',
 		content:'',
 		role:'会员'
 	},
@@ -71,7 +71,6 @@ const handleSubmit = async () => {
 			state.order.value = response.data;
 			axios.get(response.data.qrcodeUrl)
 				.then(response => {
-					debugger
 					if(response.data.alipay_trade_precreate_response.code =="10000"){
 						state.order.value = {...state.order.value,...response.data} ;
 						localStorage.setItem('orderInfo',JSON.stringify(state.order.value))
@@ -147,7 +146,8 @@ onMounted(() => {
 				</div>
 				<div id="deploy_ordersummary">
 						<div class="sidebar-info">
-							<input type="button" value="立即购买" id="confirmordersubmit" @click="handleSubmit" class="responsive-full-width">
+							<n-button type="success"  @click="handleSubmit">立即购买</n-button>
+<!--							<input type="button" value="" id="confirmordersubmit"  class="responsive-full-width">-->
 						</div>
 				</div>
 			</div>
